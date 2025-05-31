@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<!--  ***  Ideal Gas Law Simulation *** -->
+<html lang="en">
+<head>
+<title>Gas Law Simulator</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+</head>
+<style>
+body, html {
+    height: 100%;
+    margin: 0;
+    display: grid;
+    place-items: center;
+    align-items: flex-start; /* Align to the top */
+    justify-content: center;
+}
+body {
+    background-image: url('img/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    margin: 0; /* Remove default body margin */
+    padding: 0; /* Remove default body padding */
+    height: 100vh; /* Set body height to fill the viewport */
+    align-items: flex-start; /* Align to the top */
+    justify-content: center;
+  
+}
+
+
+#mainContent{
+	width: 960px;
+	height: 600px;
+	margin: auto;
+	background-color: rgba(214, 219, 209, 0.5);
+	position: relative;
+	border-style: solid;
+    border-radius: 15px;
+    border-color:rgba(96, 135, 102, 0.632); 
+	font-family: sans-serif;
+	font-size: 24px;
+    overflow: hidden; /* Ensure content doesn't overflow */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+
+/********************  CONTAINER  ***********************/
+#container{
+	position: absolute;
+	left: 160px;
+	top: 100px;
+}
+
+.electron{
+	position: absolute;
+	left:230px;
+	top:370px;
+	z-index: 0;
+}
+
+#top{
+	position: absolute;
+	left: 0px;
+	top: -298px;
+	z-index: 1;
+}
+
+#frontC{
+	position: absolute;
+	left: 0;
+	top: 23px;
+	z-index: 3;
+}
+
+#thermometer{
+	position: absolute;
+	left: 20px;
+	top: 200px;
+	z-index: 3;
+}
+
+#redLine{
+	position: absolute;
+	bottom: 10px;
+	left: 4px;
+	width: 7px;
+	height: 90px;
+	background-color: red;
+}
+
+/********************  PUMP  ***********************/
+#pump{
+	position: absolute;
+	left: 590px;
+	top: 370px;
+}
+
+#pumpTop{
+	position: absolute;
+	left: -18px;
+	top: -140px;
+	z-index: 0;
+	opacity: 1;
+}
+
+#pumpBottom{
+	position: absolute;
+	z-index: 1
+}
+
+#noGas{
+	position: absolute;
+	top: -175px;
+	left: 0px;
+	width: 100px;
+	font-size: 24px;
+	text-align: center;
+	display: none;
+}
+
+/********************  MIDDLE PIPES  ***********************/
+#pipes{
+	position: absolute;
+	left: 410px;
+	top: 380px;
+	z-index: 0;
+}
+
+#spinner{
+	position: absolute;
+	left: 33px;
+	top: 0px;
+}
+
+#clickValve{
+	position: absolute;
+	left: 80px;
+	top: 105px;
+}
+
+#lever{
+	position: absolute;
+	left: 5px;
+	top: 53px;
+}
+
+#leverF{
+	position: absolute;
+	top: 53px;
+	left: -47px;
+	display: none;
+}
+
+.valve{
+	position: absolute;
+	top: 0px;
+	left: -23px;
+}
+
+/********************  GAS AREA  ***********************/
+#gasArea{
+	position: absolute;
+	left: 650px;
+	top: 470px;
+	font-size: 14px;
+	color: white;
+}
+
+#gasA, #gasB{
+	position: absolute;
+	left: 65px;
+	top: -45px;
+	width: 170px;
+	height: 55px;
+	text-align: center;
+	/*color : #EF4743;*/
+}
+
+.gasImg, .gasImg-c{
+	position: absolute;
+	top: 0px;
+	left: -10px;
+}
+
+#gasArea p{
+	position: relative;
+	top: 40%;
+	left: 5%;
+	z-index: 2;
+}
+
+#gasB{
+	top: 25px;
+	/*color : #E0BF6C;*/
+}
+
+#gasA.pressed, #gasB.pressed{
+	font-size: 24px;
+}
+
+.demoParticle{
+	position: absolute;
+	top: 35px;
+	left: 150px;
+}
+/********************  TEMP BUTTONS  ***********************/
+#tempButtons{
+	position: absolute;
+	top: 350px;
+	left: 0px;
+	font-size: 25px;
+	padding: 12px;
+	text-decoration: none;
+}
+
+#hot, #cold, #off{
+	position: absolute;
+	padding-top: 7px;
+	text-align: center;
+	width: 75px;
+	height: 30px;
+	border-color: rgb(182, 93, 93);
+}
+
+#tempButtons p{
+	position: absolute;
+	top: 5px;
+	left: 25px;
+	text-align: center;
+	width: 65px;
+	z-index: 3;
+}
+
+.buttonT, .buttonT-c{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.buttonT-c{
+	display: none;
+}
+
+#hot{
+    top: 0px;
+}
+
+#cold{
+	top: 60px;
+}
+
+#off{
+	top: 109px;
+}
+
+a:link, a:hover, a:visited{
+	text-decoration: none;
+	color: rgb(255, 255, 255);
+
+}
+
+a img { 
+	border:none; 
+}
+
+
+
+/********************  VENT AREA  ***********************/
+#ventArea{
+	position: absolute;
+	bottom: 5px;
+	left: 125px;
+}
+
+.wave{
+	position: absolute;
+	width: 60px;
+	height: 184px;
+	bottom: 5px;
+	left: 20px;
+	z-index: 5;
+	display: none;
+}
+
+.cool{
+
+	background-image: url(img/coldWaves.png);
+	background-repeat: no-repeat;
+}
+
+.heat{
+	background-image: url(img/heatWaves.png);
+	background-repeat: no-repeat;
+}
+
+/********************  MISC  ***********************/
+#text{
+	position: absolute;
+	left: 530px;
+	top: 25px;
+	display: none;
+    color: white;
+}
+
+#updatePT, #initialPT{
+	position: absolute;
+	left: 740px;
+	top: 25px;
+	text-align: left;
+	background-color: #83A593;
+	padding: 10px 5px 0px;
+	width: 180px;
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+	border: solid 2px;
+    border-color: black;
+    color: white;
+}
+#initialPT h3{
+    text-align: center;
+    font-weight: bold;
+}
+
+#updatePT{
+	top: 155px;
+    margin-top: 15px;
+}
+#updatePT h3{
+	text-align: center;
+    font-weight: bold;
+}
+
+p{
+	padding: 0px;
+	margin: 10px;
+}
+
+h3{
+	padding: 0px;
+	margin: 0 0 5px 0;
+	font-size: 18px;
+	font-weight: normal;
+}
+
+
+#pressureArea{
+	position: absolute;
+	top: 300px;
+	left: 450px;
+	height: 80px;
+	width: 120px;
+	padding: 10px 0px 5px 0px;
+	text-align: center;
+	background-image: url("img/bubbleP.png");
+	background-repeat: no-repeat;
+    color: white;
+}
+
+#unlockedBubble, #lockedBubble{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+#lockedBubble{
+	display: none;
+}
+
+
+#volumeArea{
+	position: absolute;
+	top: 65px;
+	left: 400px;
+	height: 90px;
+	width: 120px;
+	z-index: 4;
+	padding: 10px 0;
+	text-align: center;
+}
+
+#volumeText{
+	position: absolute;
+	left: 45px;
+    color: white;
+}
+
+#up, #down{
+	position: absolute;
+	top: -20px;
+	left: 90px;
+}
+
+#down{
+	top: 35px;
+}
+
+.arrowClicked{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display: none;
+}
+
+#temperatureArea{
+	margin: 0;
+	padding: 0;
+	position: relative;
+	top: 260px;
+	left: 35px;
+	height: 90px;
+	width: 140px;
+	z-index: 4;
+	padding: 10px 0;
+	text-align: center;
+	background-image: url("img/bubbleT.png");
+	background-repeat: no-repeat;
+    color: white;
+}
+
+.lockPressed{
+	opacity: .5;
+}
+
+#vLock .lock, #vLock .unlock{
+	position: absolute;
+	top: -15px;
+	left: -20px;
+}
+
+.lock{
+	display: none;
+}
+
+.law-container {
+    width: 915px; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the container */
+    padding: 20px;
+    border: solid;
+    border-radius: 15px;
+    border-color:rgba(96, 135, 102, 0.632); 
+    background-color: #0c0c0c6d; /* Optional: Add a background color */
+    text-align: center; /* Center the text */
+    color: white;
+    position: inherit;
+    }
+.law-container h3 {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+.law-container h4 {
+    font-size: 20px;
+}
+
+.law-container p {
+    font-size: 22px;
+}
+
+.fraction {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .fraction sup {
+            display: block;
+            font-size: 40px;
+            border-bottom: 1px solid rgb(255, 255, 255);
+        }
+
+        .fraction sub {
+            display: block;
+            font-size: 40px;
+        }
+.formula-container{
+    width: 200px; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the container */
+    padding: 20px;
+    border: solid;
+    border-radius: 15px;
+    border-color:rgba(96, 135, 102, 0.632); 
+    background-color: #0c0c0c6d; /* Optional: Add a background color */
+    text-align: center; /* Center the text */
+    color: white;
+    position: absolute;
+    top: 120px;
+    left: 350px;
+    }
+
+    .formula-container h3 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}    
+.formula-container h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    
+}
+
+.formula-container-2 {
+    width: 200px; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the container */
+    padding: 20px;
+    border: solid;
+    border-radius: 15px;
+    border-color:rgba(96, 135, 102, 0.632); 
+    background-color: #0c0c0c6d; /* Optional: Add a background color */
+    text-align: center; /* Center the text */
+    color: white;
+    position: absolute;
+    top: 400px;
+    left: 350px;
+    }
+
+    .formula-container-2 h3 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}    
+.formula-container-2 h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    
+}
+
+.info {
+    width: 200px; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the container */
+    padding: 20px;
+    border: solid;
+    border-radius: 15px;
+    border-color:rgba(96, 135, 102, 0.632); 
+    background-color: #0c0c0c6d; /* Optional: Add a background color */
+    text-align: center; /* Center the text */
+    color: white;
+    position: absolute;
+    top: 120px;
+    left: 1700px;
+    }
+
+    .info h3 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}    
+.info h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    
+}
+
+.info2{
+    width: 200px; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the container */
+    padding: 20px;
+    border: solid;
+    border-radius: 15px;
+    border-color:rgba(96, 135, 102, 0.632); 
+    background-color: #0c0c0c6d; /* Optional: Add a background color */
+    text-align: center; /* Center the text */
+    color: white;
+    position: absolute;
+    top: 400px;
+    left: 1700px;
+    }
+
+    .info2 h3 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}    
+.info2 h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    
+}
+
+</style>
+
+<body class="custom-background">
+<h1 style="display:none">Gas Law Simulator</h1>
+<h2 style="display:none">Multiple Panels - pressure, volume, temperature</h2>
+	<div id="mainContent">
+
+		<div id="container">
+			<img src="img/containerBack.png" alt="">
+			<div id="top"><img src="img/top.png" alt=""></div>
+			<span id="refresh">  <img src="img/containerFront.png" id="frontC" alt="">  </span>
+			<span id="thermometer"><img src="img/thermometer.png" alt=""><div id="redLine"></div></span>
+		</div>
+
+		<div id="pipes">
+			<img src="img/pipes.png" alt="">
+			<img src="img/redDial.png" id="spinner" alt="">
+			<a href="#" id="clickValve"><img src="img/valve2.png" class="valve" alt=""><img src="img/lever.png" id="lever" alt="Release valve that releases gas."><img src="img/leverFlipped.png" id="leverF" alt=""></a>
+		</div>
+
+		<div id="pump">
+			<p id="noGas">No Gas Selected</p>
+			<img src="img/pumpBottom.png" id="pumpBottom" alt="" >
+			<a href="#" id="pumpTop"><img src="img/pumpTop2.png" alt="Handle for the pump that adds Gas A or Gas B"></a>
+		</div>
+
+		<div id="gasArea">
+			<img src="img/gasPipes.png" alt="">
+			<a href="#" id="gasA"><p>Hydrogen Atoms</p><img src="img/gasBlock2.png" class="gasImg" alt=""><img src="img/gasBlock2-c.png" class="gasImg-c" alt=""><img src="img/particleA.png" class="demoParticle" alt=""></a>
+			<a href="#" id="gasB"><p>Oxygen Atoms</p><img src="img/gasBlock2.png" class="gasImg" alt=""><img src="img/gasBlock2-c.png" class="gasImg-c" alt=""><img src="img/particleB.png" class="demoParticle" alt=""></a>
+		</div>
+
+        <div id="ventArea">
+			<img src="img/vent.png" alt=""> 
+			<div class="wave cool" style="left: 40px; background-position: -120px 0px; display: none;"></div>
+			<div class="wave cool" style="left: 140px; background-position: -120px 0px; display: none;"></div>
+			<div class="wave cool" style="left: 240px; display: none; background-position: -120px 0px;"></div>
+			<div class="wave heat" style="left: 40px; background-position: -120px 0px; display: none;"></div>
+			<div class="wave heat" style="left: 140px; background-position: -120px 0px; display: none;"></div>
+			<div class="wave heat" style="left: 240px; background-position: -120px 0px; display: none;"></div>
+		</div>
+
+		<div id="tempButtons">
+			<a href="#" id="hot"><img src="img/tempButtonImg2.png" class="buttonT" alt=""><img src="img/tempButtonImg2-c.png" class="buttonT-c" alt=""><p>High</p></a>
+            <a href="#" id="cold"><img src="img/tempButtonImg2.png" class="buttonT" alt=""><img src="img/tempButtonImg2-c.png" class="buttonT-c" alt=""><p>Low</p></a>
+			
+		</div>
+
+
+		<div id="text">
+			<p>Amount of Gas: <span id="amount">0</span> moles</p>
+		</div>
+
+		<div id="initialPT">
+			<h3 text-align = center;>Initial</h3><p>P1: <span id="P1">1</span> atm</p>
+			<p>T1: <span id="T1">406.25</span> K</p>
+		</div>
+
+		<div id="updatePT">
+			<h3>Update</h3><p>P2: <span id="P2"> -- </span> atm</p>
+			<p>T2: <span id="T2">   -- </span> K</p>
+		</div>
+
+		<div id="seperateText">
+
+			<div id="pressureArea">
+					<h3>Pressure:</h3>
+					<span class="pressure">1</span> atm
+			</div>
+
+			<div id="volumeArea">
+				
+				<a href="#" id="vLock">  
+					<img src="img/lock2.png" class="lock" alt="lock the piston">  <img src="img/unlock2.png" class="unlock" alt=""></a>
+				<div id="volumeText"><h3>Volume: </h3><span class="volume">0</span> L </div>
+				
+			</div>
+
+			<div id="temperatureArea"><h3>Temperature:</h3><span class="temperature">0</span> K</div>
+		</div>
+        <div> </div>
+
+	</div>
+    <div class="law-container">
+        <h3>What is Gay-Lussac's Law?</h3>
+        <p>Gay-Lussac's Law describes a direct relationship between the pressure and temperature of a gas at constant volume. It states that, for a given mass of gas held at a constant volume, the pressure of the gas (in atmosphere) is directly proportional to its absolute temperature (in Kelvin).</p>
+        <h3>Submitted By: </h3><p style="font-size: 24px;">Dela Cruz, Mark Lian</p><p style="font-size: 24px;">Hilis, Alvin Tiger</p><p style="font-size: 24px;">Mancol, Andie Mar</3>
+    </div>  
+ <div class="formula-container"> <h3>Gay-Lussac's Law Formula: </h3><H2><span class="fraction"><sup>P1</sup><sub>T1</sub></span> 
+          =     
+    <span class="fraction"> <sup>P2</sup> <sub>T2</sub></span></h2>
+</div>
+<div class="info"><h3>Can Be Held Constant:</h3><h2>Volume (L)</h2></div>
+<div class="info2"><h3>Elements editable:</h3><h2>Temperature(K)</h2><h2>Pressure(atm)</h2></div>
+</body>
+</html>
+<script>
+    
+$(document).ready(function(){
+
+var boxWidth = 268
+var boxHeight = 416
+
+var particleSpeed = 100;
+
+var gasA = true;
+var gasB = false;
+$("#gasA").addClass('pressed');
+$("#gasB .gasImg-c").hide();
+var first = true;
+
+var unlocked = 'P';
+var molPerPump = 30;
+var vMin = 150;
+
+var n = 0;
+var T = 325;
+var V = 1000;
+var R = 0.08206;
+var P = 0;
+var LockedP = 0;
+var LockedT = 0;
+
+$('img').bind('dragstart', function(event) { event.preventDefault(); });
+$('a').bind('dragstart', function(event) { event.preventDefault(); });
+
+addOnStart()
+spaceWaves($('.heat'));
+spaceWaves($('.cool'));
+
+
+// ^^^^  MISC AREA  ^^^^
+//  ******************    TIME INTERVAL   ***************
+setInterval(updateImage,50);
+
+
+//  ******************    VOLUME CONVERSIONS   ***************
+function getVolume(){
+    return (parseFloat($("#top").css('top'))+10)/-360*1000;
+}
+
+function getPixelVolume(volume){
+    return volume/1000*-360-10;
+}
+
+//  ******************    POSITION HEAT/COOL WAVES   ***************
+function spaceWaves(div){
+    var space = 40;
+    div.each(function(){
+        $(this).css({'left': space+'px'});
+        space=space+100;
+    });
+}
+
+//  ******************    STOP LINKS   *********************
+$("a").click(function(){
+    return false;
+});
+
+//  ******************    ADD INITIAL PARTICLES   ***************
+function addOnStart(){
+addParticles(10,'particleA.png');
+n=molPerPump;
+$("#amount").text(n);
+updatePressure();
+
+
+}
+
+var countsHeld = 0;
+var i=0;
+//  ******************    UPDATE IMAGE   *********************
+function updateImage(){
+    bounce();
+    if(heatClicked || coolClicked){
+        changeHeat();
+    }
+
+    // allows hold as well as click for changing volume
+    if(upDownPressed=="down"){
+        countsHeld++;
+        if(countsHeld>5){
+            moveTop(-1);
+        }
+    }
+    if(upDownPressed=="up"){
+        countsHeld++;
+        if(countsHeld>5){
+            moveTop(1);
+        }
+    }
+
+    if (i > 5){ // animate the temp waves
+    i=0;
+    }
+    $('.wave').css({'backgroundPosition' : i * -60 + 'px' + " 0px"});
+      i++;
+}
+
+
+// ^^^^  BUTTON AREA   ^^^^
+
+//  ******************    CLICK PUMP  *********************
+$("#pumpTop").click(function(){
+    if((gasA || gasB) && n<300){
+        $("#pumpTop").animate({'top': '-60'}).animate({'top': '-140'}); // pump motion
+
+        // only reinflate if a gas is selected
+        if(n==0 && (gasA || gasB)){
+            V = molPerPump*R*T // find volume for 1 atm
+
+            if(V<vMin){ // keep within bounds
+                V=vMin;
+            }
+            if(V>1000){
+                V=1000;
+            }
+            var topPos = getPixelVolume(V);
+            $("#top").animate({"top":topPos+"px"});
+            setTimeout(clickPumpAddParts,100); // delay so no particles get stuck in bottom
+
+            $("#top").draggable("option", "disabled", false); //re-enable drag
+
+        }else{ // What happens normally
+
+            clickPumpAddParts(); 
+        }
+    }else{
+        if(!gasA && !gasB){
+            $("#noGas").text("No Gas Selected").fadeIn().delay(300).fadeOut(300);
+        }else{
+            $("#noGas").text("Particle Limit").fadeIn().delay(300).fadeOut(300);
+        }
+    }
+});
+
+function clickPumpAddParts(){ // add particles
+    if(gasA){
+        addParticles(10,'particleA.png');
+        n+=molPerPump;
+    }
+    if(gasB){
+        addParticles(10,'particleB.png');
+        n+=molPerPump;
+    }
+    $("#amount").text(n);
+    updatePressure();
+    FinalPT();
+    
+}
+
+
+//  ******************    CLICK LEVER  *********************
+$("#clickValve").click(function(){
+    $("#lever").fadeOut(30).delay(400).fadeIn(30); // toggle images
+    $("#leverF").fadeIn(30).delay(400).fadeOut(30);
+
+    if(n==molPerPump){ // if all particles released
+        $("#top").animate({"top":"-5px"});
+        V=0;
+        lockUnclick("#vLock");
+    }
+
+    if(n>molPerPump/2){ // don't subtract if it's already 0
+        n-=molPerPump;
+    }
+
+    releaseParticles(10);
+    updatePressure();
+    FinalPT();
+    
+});
+
+var dh = 0;
+changeHeat();
+var heatClicked = false;
+var coolClicked = false;
+//  ******************   TEMP BUTTONS   *********************
+$("a#hot").click(function(){
+    // unclick other
+    if(coolClicked){
+        $(".cool").hide();
+        $("#cold").css({color: 'white'});
+        coolClicked=false;
+    }
+
+    // toggle button clicked
+    if(!heatClicked){
+        dh=5;
+        $(".heat").fadeIn();
+        $(this).css({color: '#E21717'})
+        heatClicked=true;
+    }else{
+        $(".heat").fadeOut();
+        $(this).css({color: 'white'})
+        heatClicked=false;
+    }
+    clickButtons()
+});
+$("a#cold").click(function(){
+    // unclick other
+    if(heatClicked){
+        $(".heat").hide();
+        $("#hot").css({color: 'white'})
+        heatClicked=false;
+    }
+
+    // toggle button clicked
+    if(!coolClicked){
+        dh=-5;
+        $(".cool").fadeIn();
+        $(this).css({color: '#00B3C6'});
+        coolClicked=true;
+    }else{
+
+        $(".cool").fadeOut();
+        $("a#cold:link").css({color: 'white'});
+        coolClicked=false;
+    }
+    clickButtons()
+});
+$("a#off").click(function(){
+    dh=0;
+    $(".cool").hide();
+    $(".heat").hide();
+    $("a#cold").css({color: 'white'});
+    $("a#hot").css({color: 'white'});
+    coolClicked=false;
+    heatClicked=false;
+    clickButtons()
+    /*$("#off .buttonT-c").show();
+    setTimeout(function(){
+        $("#off .buttonT-c").hide();
+    },200);*/
+});
+
+function clickButtons(){
+    if(coolClicked){
+        $("#cold .buttonT-c").show();
+    }else{
+        $("#cold .buttonT-c").hide();
+    }
+    if(heatClicked){
+        $("#hot .buttonT-c").show();
+    }else{
+        $("#hot .buttonT-c").hide();
+    }
+}
+
+
+//  ******************   LOCK BUTTON   *********************
+$("#vLock").click(function(){
+    if($(this).hasClass('pressed')){
+        lockUnclick("#vLock");
+    }else{
+        lockClick("#vLock");
+    }
+});
+
+function lockClick(lockID){
+    if($(lockID).hasClass('pressed')==false){
+        $(lockID).addClass('pressed');
+        PreviewPT();
+        LockPT();
+        //$("#lockedBubble").show();
+        //$("#unlockedBubble").hide();
+        $(lockID+" .lock").show();
+        $(lockID+" .unlock").hide();
+    }
+}
+function lockUnclick(lockID){
+    if($(lockID).hasClass('pressed')){
+        $(lockID).removeClass('pressed');
+        
+        //$("#lockedBubble").hide();
+        //$("#unlockedBubble").show();
+        $(lockID+" .lock").hide();
+        $(lockID+" .unlock").show();
+    }
+}
+
+$("#lockPT").click(function(){
+    if($(this).hasClass('pressed')){
+        $(this).removeClass('pressed');
+    }else{
+        $(this).addClass('pressed');
+
+    }
+});
+
+
+//  ******************    GASS A B BUTTONS   ********************
+$("#gasA").click(function(){
+    if(gasA==true){
+        gasA=false;
+        $("#gasA").removeClass('pressed');
+        $("#gasA .gasImg-c").hide();
+    }else{
+        gasA=true;
+        $("#gasA").addClass('pressed');
+        $("#gasA .gasImg-c").show();
+    }
+});
+
+$("#gasB").click(function(){
+    if(gasB==true){
+        gasB=false;
+        $("#gasB").removeClass('pressed');
+        $("#gasB .gasImg-c").hide();
+    }else{
+        gasB=true;
+        $("#gasB").addClass('pressed');
+        $("#gasB .gasImg-c").show();
+    }
+});
+
+
+var volumeChange = false;
+
+//  ******************    CLICK MOVE TOP   *********************
+$("#container").click(function(e){
+    if(V!=0){
+        topPos = e.pageY - this.offsetTop;
+        topPos = topPos-423;
+        V = topPos/-360*1000
+        display = V.toFixed(0);
+        if(V>vMin && V<1000){
+            $(".volume").text(display);
+            $('#top').css({'top':topPos+'px'})
+            volumeChange = true;
+            updatePressure();
+        }
+    }
+});
+
+
+$("#up").click(function(e){
+    if(upDownPressed=="up"){
+        upDownPressed="none";
+        $("#up .arrowClicked").hide();
+    }else{
+        upDownPressed="up";
+        $("#down .arrowClicked").hide();
+        $("#up .arrowClicked").show();
+    }
+});
+
+$("#down").click(function(e){
+    if(upDownPressed=="down"){
+        upDownPressed="none";
+        $("#down .arrowClicked").hide();
+    }else{
+        upDownPressed="down";
+        $("#up .arrowClicked").hide();
+        $("#down .arrowClicked").show();
+    }
+});
+
+function moveTop(posNeg){
+    tempV=parseInt(V+10*posNeg);
+    if(tempV>=141 && tempV<=1009){
+        if(tempV>1000){
+            tempV = 1000;
+        }
+        if(tempV<vMin){
+            tempV=vMin;
+        }
+        V = tempV;
+        volumeChange = true;
+
+        topPos = getPixelVolume(V);
+
+        display = V.toFixed(0);
+        $(".volume").text(display);
+
+        $('#top').css({'top':topPos+'px'});
+        updatePressure();
+    }else{
+        
+    }
+}
+
+
+var upDownPressed = "none";
+/*$("#down").mousedown(function(e){
+    upDownPressed = "down"
+});
+$("#down").mouseup(function(e){
+    upDownPressed = "none"
+    countsHeld = 0;
+});
+
+$("#up").mousedown(function(e){
+    upDownPressed = "up"
+});
+$("#up").mouseup(function(e){
+    upDownPressed = "none"
+    countsHeld = 0;
+});*/
+
+// ^^^^ UPDATE AREA ^^^^
+
+var oldN = 30;
+//  ******************    UPDATE PRESSURE   *********************
+function updatePressure(){
+    $(".volume").text(V.toFixed(0));
+
+
+    // Change Pressure
+    if($("#vLock").hasClass('pressed') || volumeChange || first || P==0){ 
+        P = (n*R*T)/V;
+        if(V==0){
+            P=0;
+        }
+        var display = P
+        if(display<100){
+            display = display.toFixed(2)
+        }else{
+            display = display.toFixed(1)
+        }
+        $(".pressure").text(display);
+
+        var rotation = P/50*300
+        if(rotation>320){
+            rotation=320;
+        }
+
+
+
+$("#spinner").css({transform: 'rotate('+rotation+'deg)'});	
+
+
+
+    }
+
+    // Change Volume
+    if(!$("#vLock").hasClass('pressed') && volumeChange==false && P>0){
+        V = n*R*T/P
+
+        if(V>1000 || V<vMin){
+            if(V>1000){
+                V=1000;
+            }else if(V==0){
+                // Don't reset to bounds if container is empty
+            }else{
+                V=vMin;
+            }
+            
+            //lockClick("#vLock");
+            volumeChange = true;
+            updatePressure();
+        }
+
+        var display = V.toFixed(0);
+        $(".volume").text(display);
+        var topPos = getPixelVolume(V);
+
+        if(oldN!=n){ // if moles have changed
+            $("#top").animate({'top': +topPos+'px'},'fast');
+
+
+        }else{ // if temperature has changed
+            $("#top").css({'top': +topPos+'px'});
+
+        }
+        oldN = n;
+    }
+    volumeChange = false;
+    first = false;
+}
+
+
+
+//  ******************    UPDATE RMS   *********************
+function FinalPT(){
+    $("#P2").text(P.toFixed(2));
+    $("#T2").text(T);
+}
+
+
+//  ******************    UPDATE KE   *********************
+function PreviewPT(){
+    $("#P1").text(P.toFixed(2));
+    $("#T1").text(T);
+}
+
+function LockPT(){
+    LockedP = P;
+    LockedT = T;
+
+}
+
+
+//  ******************   CHANGE HEAT   *********************
+// called only from temp buttons unlike set heat
+function changeHeat(){
+    topHeight = 147;
+    T+=dh;
+    if(T>600){
+        T=600;
+    }
+    if(T<10){
+        T=10;
+    }
+
+    setHeat();
+    updatePressure();
+    FinalPT();
+    
+}
+
+//  ******************   SET HEAT   *********************
+function setHeat(){
+    if(T>600){
+        T=600;
+    }
+    if(T<10){
+        T=10;
+    }
+    
+    percentHeat= T/600;
+    h = percentHeat*150;
+    display = T.toFixed(0)
+    $(".temperature").text(display);
+    $("#redLine").css({'height':h+'px'});
+
+    particleSpeed = percentHeat * 7
+}
+
+
+// ^^^^   PARTICLE AREA  ^^^^
+
+//  ******************    ADD PARTICLES   *********************
+function addParticles(num, img){
+    for(i=0;i<num;i++){
+        if(img=='particleB.png'){
+            var speed = Math.random()*2+1;
+            $('#container').append('<img src="img/'+img+'" class="electron B" angle=-10 speed='+speed+' xPixel=0 yPixel=0 alt="">');
+        }else{
+            var speed = Math.random()*2+2;
+            $('#container').append('<img src="img/'+img+'" class="electron A" angle=-10 speed='+speed+' xPixel=0 yPixel=0 alt="">');
+        }
+
+    }
+
+}
+
+
+
+var idIntRel;
+//  ******************    RELEASE PARTICLES  *********************
+function releaseParticles(num){
+    var releasedCount=0;
+    var numA = 0;
+    var numB = 0;
+    var trappedA = $(".A").length-$(".A.released").length;
+    var trappedB = $(".B").length-$(".B.released").length;
+    var trappedTotal = trappedA + trappedB;
+    if(trappedA>0){
+        numA = parseInt((trappedA/trappedTotal)*num);
+    }if(trappedB>0){
+        numB = num-numA;
+    }
+
+    $(".A").each(function(index){
+        if($(this).hasClass('released')){
+            releasedCount++;
+        }
+        if(index<numA+releasedCount){
+            $(this).addClass('released');
+        }
+    });
+
+    releasedCount=0;
+    $(".B").each(function(index){
+        if($(this).hasClass('released')){
+            releasedCount++;
+        }
+        if(index<numB+releasedCount){
+            $(this).addClass('released');
+        }
+    });
+
+
+    var moles = parseFloat($("#amount").text());
+    if(moles>0){
+        $("#amount").text(moles-molPerPump);
+        removeParticles();
+    }
+}
+
+
+//  ******************    REMOVE PARTICLES   *********************
+function removeParticles(){
+    $(".electron").each(function(){
+        if($(this).hasClass("released")){
+            $(this).css({'left': '350px', 'top': '413px'});
+            //rebound($(this));
+            $(this).stop();
+            var pos = $(this).position();
+            var angle = parseFloat($(this).attr('angle'));
+            angle = angle/10
+
+                                // KEEP ANGLE WITHIN 360
+            if(angle<0){
+                angle=angle*-1;
+            }
+            if(angle>45){
+                angle = angle%45;
+            }
+
+            angle -= 22;
+
+            if(particleSpeed/speed<1500){
+                buffer=(1500-particleSpeed/speed)/50;
+            }
+
+            var speed = parseFloat($(this).attr('speed'));
+            radius = 100;
+            x = pos.left + Math.cos(angle*deg2rad)*radius;
+            y = pos.top + Math.sin(angle*deg2rad)*radius;
+            $(this).animate({'opacity': 0, 'left': x, 'top': y},1000/speed,'linear', function(){
+                $(this).remove();
+                FinalPT();
+                
+            });
+        }
+    });
+}
+
+
+var deg2rad = Math.PI/180;
+//  ******************    REBOUND   *********************
+function rebound(object){
+    object.stop();
+    var pos = object.position();
+    var angle = parseFloat(object.attr('angle'));
+    var speed = parseFloat(object.attr('speed'));
+    radius = 450;
+    x = pos.left + Math.cos(angle*deg2rad)*radius;
+    y = pos.top + Math.sin(angle*deg2rad)*radius;
+    object.animate({'left': x, 'top': y},particleSpeed/speed,'linear');
+}
+
+
+
+//  ******************    BOUNCE   *********************
+function bounce(){
+    $(".electron").each(function(){
+        if(!$(this).hasClass('released')){
+            var topPos = parseInt($("#top").css('top'))+371;
+            var ballSize = 10;
+            if($(this).hasClass('B')){
+                ballSize = 20;
+            }
+
+            var angle = parseFloat($(this).attr('angle'));
+            var speed = parseFloat($(this).attr('speed'))*particleSpeed;
+
+            // SET ANGLE FIRST TIME AROUND
+            if(angle==-10){
+                angle = Math.random()*90+180;
+                //angle = 210;
+                $(this).attr('angle', angle);
+                $(this).addClass('new');
+                setTimeout(function(){
+                    $(".electron").removeClass('new');
+                },300);
+            }
+
+
+            var xVel = Math.cos(angle*deg2rad)*speed;
+            var yVel = Math.sin(angle*deg2rad)*speed;
+            
+            /*if($(this).hasClass("new")){
+                xVel = Math.cos(angle*deg2rad)*8;
+                yVel = Math.sin(angle*deg2rad)*8;
+            }*/
+
+            if(speed<5){
+                xPixel = parseFloat($(this).attr('xPixel'));
+                yPixel = parseFloat($(this).attr('yPixel'));
+                var tempVar = 0;
+
+                tempVar = xVel+xPixel; // add remainder
+                xVel = Math.round(tempVar);
+                xPixel = tempVar - xVel; // get rounded off remainder
+
+                $(this).attr('xPixel',xPixel); // store for next time
+
+                tempVar = yVel+yPixel; // add remainder
+                yVel = Math.round(tempVar);
+                yPixel = tempVar - yVel; // get rounded off remainder
+                
+                $(this).attr('yPixel',yPixel); // store for next time
+            }
+
+            var pos = $(this).position();
+            xPos = pos.left + xVel;
+            yPos = pos.top + yVel;
+
+
+            if(xPos>(boxWidth-ballSize) || xPos<0){
+                xPos = pos.left - xVel*2;
+                angle=180+angle*-1;
+                $(this).attr('angle',angle);
+            }
+            if(yPos>(boxHeight-ballSize-20) || yPos<topPos+20){
+                yPos = pos.top - yVel*2;
+                angle=angle*-1;
+                $(this).attr('angle',angle);
+            }
+
+            if(yPos<topPos+20){
+                yPos=topPos+25;
+            }
+
+            
+            $(this).css({'left': xPos+'px', 'top': yPos+'px'});
+        }
+    });
+  
+}
+
+
+});
+
+</script>
+</html>
